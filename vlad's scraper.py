@@ -25,8 +25,7 @@ this_req = s.post(URL + ANOTHER_ROUTE, headers=HEADERS_JEWELRY)
 print('STATUS CODE: ', this_req.status_code)
 cookies = this_req.cookies
 
-soup = bs(s.get(URL, headers=HEADERS).text, 'html.parser')
-# tdata = soup.find('td', {"class":"productListing-data"})
-body = soup.findAll('body')
+soup = bs(s.get('https://www.wonatrading.com/jewelry/anklet', headers=HEADERS).text, 'html.parser')
 
-print(body)
+for product_name in soup.find_all('font', style = 'display: block;height:40px;text-transform: uppercase;'):
+    print(product_name.text)
