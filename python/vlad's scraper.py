@@ -25,7 +25,9 @@ this_req = s.post(URL + ANOTHER_ROUTE, headers=HEADERS_JEWELRY)
 print('STATUS CODE: ', this_req.status_code)
 cookies = this_req.cookies
 
-soup = bs(s.get('https://www.wonatrading.com/jewelry/anklet', headers=HEADERS).text, 'html.parser')
+# url of html file to download
+url = 'https://www.wonatrading.com/product_info.php?products_id=482327&kind=2&cPath=172_93_96&description=Gold-Dipped-Metal-Bar-Station-Anklet'
 
-for product_name in soup.find_all('font', style = 'display: block;height:40px;text-transform: uppercase;'):
-    print(product_name.text)
+soup = bs(s.get(url, headers=HEADERS).text, 'html.parser')
+
+print(soup.find('td', class_='products_info_price').text)
