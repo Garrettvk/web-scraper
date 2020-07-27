@@ -6,7 +6,7 @@ from clean_description import *
 def scrape_one_product(html):
         
 
-    with open(html) as html_file:  # open html file
+    with open(f'../html/{html}') as html_file:  # open html file
         soup = BeautifulSoup(html_file, 'lxml')  # soup = parsed html
 
     product_name = soup.find('h2').text
