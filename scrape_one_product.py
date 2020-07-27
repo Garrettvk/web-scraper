@@ -36,3 +36,20 @@ def scrape_one_product(html):
             category3, image1, image2, description, price]    
 
     return data
+
+def scrape_data(pages):
+    
+    data = [] # list of data from each page
+
+    for page in pages: # iterate over html for each product
+        page = scrape_one_product(page) # page = return of scrape_one_product function
+        data.append(page) # add data from page
+
+    # column names are from webscrapper output
+    columns = ['productname', 'category1', 'category2',
+            'category3', 'image1', 'image2', 'description', 'price']
+
+    # create dataframe
+    df = pd.DataFrame(columns = columns, data = data)
+
+    return df
