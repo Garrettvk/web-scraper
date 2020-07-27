@@ -3,41 +3,36 @@ import requests
 import pandas as pd
 from clean_description import *
 
-with open('simple.html') as html_file:  # open html file
-    soup = BeautifulSoup(html_file, 'lxml')  # soup = parsed html
+def scrape_one_product(html):
+        
 
-product_name = soup.find('h2').text
+    with open(html) as html_file:  # open html file
+        soup = BeautifulSoup(html_file, 'lxml')  # soup = parsed html
 
-categories = soup.find_all('a', style='font-family:eurof;font-size:14px;')
+    product_name = soup.find('h2').text
 
-category1, category2, category3 = categories[0].text, categories[1].text, categories[2].text
+    categories = soup.find_all('a', style='font-family:eurof;font-size:14px;')
 
-image1 = soup.find('img', id='main_img')['src']
+    category1, category2, category3 = categories[0].text, categories[1].text, categories[2].text
 
-image2 = soup.find('img', id='des_img')['src']
+    image1 = soup.find('img', id='main_img')['src']
 
-# raw description
-description = soup.find('td', class_='tdBorder').find('p').text
+    image2 = soup.find('img', id='des_img')['src']
 
-# clean description
-description = clean_description(description)
+    # raw description
+    description = soup.find('td', class_='tdBorder').find('p').text
 
-# raw price
-price = soup.find('td', class_='products_info_price').text
+    # clean description
+    description = clean_description(description)
 
-# cleaned price
-price = clean_price(price)
+    # raw price
+    price = soup.find('td', class_='products_info_price').text
 
-# each product attribute is put into a list
-data = [product_name, category1, category2,
-        category3, image1, image2, description, price]
+    # cleaned price
+    price = clean_price(price)
 
-# column name is from webscrapper output
-columns = ['productname', 'category1', 'category2',
-           'category3', 'image1', 'image2', 'description', 'price']
+    # each product attribute is put into a list
+    data = [product_name, category1, category2,
+            category3, image1, image2, description, price]    
 
-# create dataframe, notice that data list is wrapped in brackets
-df = pd.DataFrame(columns = columns, data = [data])
-
-# write dataframe to csv
-df.to_csv('output.csv', index = False)
+    return data
