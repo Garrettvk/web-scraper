@@ -1,0 +1,5 @@
+find all the data for one product
+
+iterate over each product
+    find url links to each product
+    scrape each link individually
