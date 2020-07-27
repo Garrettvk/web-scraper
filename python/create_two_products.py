@@ -1,22 +1,22 @@
 import pandas as pd
-from scrape_one_product import scrape_one_product
+from scrape_one_product import *
 
-# variable for html page
-pages = ['simple.html', 'simple2.html']
+# prints entire column width
+pd.set_option('display.max_colwidth', 1000)
 
-# create dataframe from return of function
-data = []
+# show all columns and rows
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
-for page in pages:
-    page = scrape_one_product(page)
-    data.append(page)
+# currently these html files are strings that represent a file name
+# the with open function uses these variables to open local html files
+# in production these strings should contain the urls for each product page
+# rather than opening a local html file, 
+# the requests library should parse product pages on wonatrading.com
+pages = ['simple.html', 'simple2.html'] # variable for html pages
 
-# column name is from webscrapper output
-columns = ['productname', 'category1', 'category2',
-        'category3', 'image1', 'image2', 'description', 'price']
+df = scrape_data(pages) # dataframe from scrape_data function
 
-# create dataframe, notice that data list is wrapped in brackets
-df = pd.DataFrame(columns = columns, data = data)
+df.to_csv('output.csv', index = False) # write dataframe to csv
 
-# write dataframe to csv
-df.to_csv('output.csv', index = False)
+print(df) # print df
