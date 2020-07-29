@@ -1,6 +1,6 @@
 the web scraper is working but I can't get more than 7 products because my IP gets blocked by wonatrading
 
 this program could be improved by:
-    combining categories
-    change column names to names used in template
+    clean description
+    add domain to image links
     organize functions

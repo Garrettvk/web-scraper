@@ -89,7 +89,8 @@ def scrape_data(product_page_url): # gets data from single page
         categories = soup.find_all(
             'a', style='font-family:eurof;font-size:14px;')
 
-        category1, category2, category3 = categories[0].text, categories[1].text, categories[2].text
+        # combine all 3 categories and seperate with ; and /
+        Category = f'{categories[0].text};{categories[1].text}/{categories[2].text}'
 
         image1 = soup.find('img', id='main_img')['src']
 
@@ -108,8 +109,7 @@ def scrape_data(product_page_url): # gets data from single page
         price = clean_price(price)
 
         # each product attribute is put into a list
-        data = [product_name, category1, category2,
-                category3, image1, image2, description, price]
+        data = [product_name, Category, image1, image2, description, price]
 
         return data
 
@@ -118,8 +118,7 @@ def get_data(pages): # iterate over pages and create dataframe
     data = []  # list of data from each page
 
     # column names are from webscrapper output
-    columns = ['productname', 'category1', 'category2',
-               'category3', 'image1', 'image2', 'description', 'price']
+    columns = ['Product Name', 'Category', 'Product Image File - 1', 'Product Image File - 2', 'Product Description', 'Cost Price']
 
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
