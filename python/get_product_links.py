@@ -30,6 +30,6 @@ def get_product_links():
             
     return product_links
 
-product_links = get_product_links()
+# product_links = get_product_links()
 
-print(product_links[1])
+# print(product_links[1])

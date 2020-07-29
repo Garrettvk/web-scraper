@@ -8,12 +8,7 @@ pd.set_option('display.max_colwidth', 1000)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-# currently these html files are strings that represent a file name
-# the with open function uses these variables to open local html files
-# in production these strings should contain the urls for each product page
-# rather than opening a local html file, 
-# the requests library should parse product pages on wonatrading.com
-pages = ['simple.html', 'simple2.html'] # variable for html pages
+pages = get_product_links()[0:2] # first 2 pages
 
 df = scrape_data(pages) # dataframe from scrape_data function
 
