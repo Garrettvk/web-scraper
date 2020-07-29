@@ -7,6 +7,7 @@ def get_product_links():
     product_links = []  # this is product urls for all the products on the first page
 
     products_url = 'https://www.wonatrading.com/jewelry/anklet'  # url for login page
+    # second_page = 'https://www.wonatrading.com/jewelry/anklet/page=2'
     domain = 'https://www.wonatrading.com/' # domain of website
 
     headers = {
