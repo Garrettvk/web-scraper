@@ -3,6 +3,8 @@ import requests
 import pandas as pd
 from clean_description import *
 from get_product_links import get_product_links
+import time
+
 
 def scrape_one_product(product_page_url):
 
@@ -12,8 +14,8 @@ def scrape_one_product(product_page_url):
     }
 
     product_headers = {
-        'cookie' : 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; _gid=GA1.2.1153286955.1595996477; __asc=4c7656061739a9974840637ce99; _gat_gtag_UA_46005179_1=1; osCsid=93lptbfloa01anulnvbe0a9jj3; TawkConnectionTime=0; __ar_v4=LM3XUYFU3ZECHJECYX2EJI%3A20200725%3A75%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A75%7CG3NB2AWGMJALLM3LQB7B6W%3A20200725%3A75',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',    
+        'cookie': 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; _gid=GA1.2.1153286955.1595996477; __asc=4c7656061739a9974840637ce99; _gat_gtag_UA_46005179_1=1; osCsid=93lptbfloa01anulnvbe0a9jj3; TawkConnectionTime=0; __ar_v4=LM3XUYFU3ZECHJECYX2EJI%3A20200725%3A75%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A75%7CG3NB2AWGMJALLM3LQB7B6W%3A20200725%3A75',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
     }
 
     login_data = {
@@ -29,16 +31,19 @@ def scrape_one_product(product_page_url):
         # login
         login_url = 'https://www.wonatrading.com/login'  # url for login page
         request = session.get(login_url, headers=headers)  # request login page
-        request = session.post(login_url, data=login_data, headers=headers)  # send data to login
-            
+        request = session.post(login_url, data=login_data,
+                               headers=headers)  # send data to login
+
         # request webpage of product
-        request = session.get(product_page_url, headers=product_headers).content
+        request = session.get(
+            product_page_url, headers=product_headers).content
 
         soup = BeautifulSoup(request, 'lxml')  # soup = parsed html
 
         product_name = soup.find('h2').text
 
-        categories = soup.find_all('a', style='font-family:eurof;font-size:14px;')
+        categories = soup.find_all(
+            'a', style='font-family:eurof;font-size:14px;')
 
         category1, category2, category3 = categories[0].text, categories[1].text, categories[2].text
 
@@ -69,14 +74,22 @@ def scrape_data(pages):
 
     data = []  # list of data from each page
 
-    for page in pages:  # iterate over html for each product
-        # page = return of scrape_one_product function
-        page = scrape_one_product(page)
-        data.append(page)  # add data from page
-
     # column names are from webscrapper output
     columns = ['productname', 'category1', 'category2',
                'category3', 'image1', 'image2', 'description', 'price']
+
+    try: # try while ip isn't blocked
+        for page in pages:  # iterate over html for each product
+            # time.sleep(60) # sleep function limits the number of requests over time
+            page = scrape_one_product(page) # page = return of scrape_one_product function
+            data.append(page)  # add data from page
+
+    except AttributeError:      
+
+        # create dataframe
+        df = pd.DataFrame(columns=columns, data=data)
+
+        return df    
 
     # create dataframe
     df = pd.DataFrame(columns=columns, data=data)
