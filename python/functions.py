@@ -94,8 +94,12 @@ def scrape_data(product_page_url): # gets data from single page
 
         image1 = soup.find('img', id='main_img')['src']
 
-        # add try except
-        image2 = soup.find('img', id='des_img')['src']
+        try: # try looking for second image
+            image2 = soup.find('img', id='des_img')['src']
+
+
+        except TypeError: # if there's no image it will raise a type error and stop the program
+            image2 = '' # all we need is an empty string
 
         # raw description
         description = soup.find('td', class_='tdBorder').find('p').text
