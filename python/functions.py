@@ -94,6 +94,7 @@ def scrape_data(product_page_url): # gets data from single page
 
         image1 = soup.find('img', id='main_img')['src']
 
+        # add try except
         image2 = soup.find('img', id='des_img')['src']
 
         # raw description
