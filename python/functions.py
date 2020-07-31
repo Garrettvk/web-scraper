@@ -2,9 +2,14 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 import time
+from selenium.common.exceptions import StaleElementReferenceException
 
 # path to chromedriver
 driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
+domain = r'https://www.wonatrading.com/'
+product_page = r'https://www.wonatrading.com/jewelry/anklet'
+
+
 
 def clean_description(input_string):
 
@@ -51,8 +56,6 @@ def get_product_links():
     login_button.click()  # clicks login button
 
     product_links = []  # this is product urls for all the products on the first page
-
-    product_page = r'https://www.wonatrading.com/jewelry/anklet'
 
     driver.get(product_page)  # first product page
 
@@ -131,3 +134,25 @@ def get_data(pages): # iterate over pages and create dataframe
     df = pd.DataFrame(columns=columns, data=data)
 
     return df
+
+def get_product_pages(domain, product_page):
+
+    product_pages = []
+
+    driver.get(domain)
+    driver.get(product_page)
+
+    next_button = driver.find_element_by_class_name('pageResults')
+
+    is_next_button = True # flag for while loop
+
+    while is_next_button: # loop while next button exists
+        try: 
+            product_pages.append(driver.page_source) # add url from page, currently the sends raw html
+            next_button.click() # click next button
+        except StaleElementReferenceException: # when this error is thrown it means the next button is gone
+            is_next_button = False # this breaks the loop
+    
+    return product_pages # return list of urls
+
+print(get_product_pages(domain, product_page))
