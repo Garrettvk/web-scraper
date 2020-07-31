@@ -59,15 +59,26 @@ def get_product_links():
 
     driver.get(product_page)  # first product page
 
-    soup = BeautifulSoup(driver.page_source, 'html5lib')  # soup = parsed html
+    next_button = driver.find_element_by_class_name('pageResults')
 
-    # this html element contains the href for the product
-    products = soup.find_all('a', style="position:relative;float:left;")
+    is_next_button = True # flag for while loop
 
-    for product in products:  # iterate each product on webpage
-        product_link = product['href']  # assign href to a variable
-        product_link = product_link.replace('\r\n', '')  # remove hidden characters from href
-        product_links.append(f'{domain}{product_link}')  # add domain
+    while is_next_button: # loop while next button exists
+        try:
+            soup = BeautifulSoup(driver.page_source, 'html5lib')  # soup = parsed html
+
+            # this html element contains the href for the product
+            products = soup.find_all('a', style="position:relative;float:left;")
+
+            for product in products:  # iterate each product on webpage
+                product_link = product['href']  # assign href to a variable
+                product_link = product_link.replace('\r\n', '')  # remove hidden characters from href
+                product_links.append(f'{domain}{product_link}')  # add domain
+            next_button.click() # click next button
+        except StaleElementReferenceException: # when this error is thrown it means the next button is gone
+            is_next_button = False # this breaks the loop
+
+    
             
     return product_links
 
@@ -135,24 +146,3 @@ def get_data(pages): # iterate over pages and create dataframe
 
     return df
 
-def get_product_pages(domain, product_page):
-
-    product_pages = []
-
-    driver.get(domain)
-    driver.get(product_page)
-
-    next_button = driver.find_element_by_class_name('pageResults')
-
-    is_next_button = True # flag for while loop
-
-    while is_next_button: # loop while next button exists
-        try: 
-            product_pages.append(driver.page_source) # add url from page, currently the sends raw html
-            next_button.click() # click next button
-        except StaleElementReferenceException: # when this error is thrown it means the next button is gone
-            is_next_button = False # this breaks the loop
-    
-    return product_pages # return list of urls
-
-print(get_product_pages(domain, product_page))
