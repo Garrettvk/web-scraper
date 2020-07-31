@@ -1,5 +1,7 @@
 from selenium import webdriver
 from getpass import getpass
+from functions import *
+
 
 # this is more secure than hard coding the credentials in the file
 # username = input('Enter your username: ')
@@ -22,4 +24,8 @@ password_textbox = driver.find_element_by_name('password') #find element for pas
 password_textbox.send_keys(password) # send what you put as password
 
 login_button = driver.find_element_by_id('btnLogin') # element of login button
-login_button.click() # clicks login button
+login_button.click()  # clicks login button
+
+pages = get_product_links()[0:1][0]  # first page
+
+driver.get(pages)  # open first product page
