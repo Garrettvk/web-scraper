@@ -5,3 +5,14 @@ this program could be improved by:
     clean description
     add domain to image links
     organize functions
+
+we need to scrape all jewelry
+    I need to iterate over each category and sub category
+        all the categories are in the drop down menu of jewelry button
+    i need to get ever url for every piece of jewelry
+        check for and remove duplicate links
+        once the urls are found save them to a file
+        check new arrivals and if non of the urls have been saved, add it to the file of urls
+        How would you keep track of deleted items?
+        
+    then scrape the data
