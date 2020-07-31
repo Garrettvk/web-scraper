@@ -1,4 +1,5 @@
-the web scraper is working but I can't get more than 7 products because my IP gets blocked by wonatrading
+get links function should get links from every page not just the first.
+
 
 this program could be improved by:
     clean description
