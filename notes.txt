@@ -16,3 +16,10 @@ we need to scrape all jewelry
         How would you keep track of deleted items?
         
     then scrape the data
+
+    you could make the scraper faster by disabling images
+        avoid the next button by finding the number of pages based on raw html
+        url patterns match the number of pages
+
+    one scraper is picking up hair comb
+        skip porducts that aren't jewelry
