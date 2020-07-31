@@ -53,21 +53,21 @@ def get_product_links():
 def scrape_data(product_page_url): # gets data from single page
 
     headers = {
-        'cookie': 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; osCsid=lcau16rhuad4cgo3nqt1g6k103; __asc=e88cdaa517398cd92b44cd05553; _gid=GA1.2.1153286955.1595996477; _gat_gtag_UA_46005179_1=1; TawkConnectionTime=0; __ar_v4=G3NB2AWGMJALLM3LQB7B6W%3A20200725%3A52%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A52%7CLM3XUYFU3ZECHJECYX2EJI%3A20200725%3A52',
+        'cookie': 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; _gid=GA1.2.1153286955.1595996477; osCsid=5hd6krf8r4fjpo38k8fupefdo7; __asc=45f23bee173a221c9ecf1ac3f9a; TawkConnectionTime=0; __ar_v4=LM3XUYFU3ZECHJECYX2EJI%3A20200725%3A101%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A101%7CG3NB2AWGMJALLM3LQB7B6W%3A20200725%3A101',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'
     }
 
     product_headers = {
-        'cookie': 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; _gid=GA1.2.1153286955.1595996477; __asc=4c7656061739a9974840637ce99; _gat_gtag_UA_46005179_1=1; osCsid=93lptbfloa01anulnvbe0a9jj3; TawkConnectionTime=0; __ar_v4=LM3XUYFU3ZECHJECYX2EJI%3A20200725%3A75%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A75%7CG3NB2AWGMJALLM3LQB7B6W%3A20200725%3A75',
+        'cookie': 'cookie_test=please_accept_for_session; __auc=8afe36de17389481e509d9e1c71; _ga=GA1.2.1781461277.1595736073; __tawkuuid=e::wonatrading.com::fl9A0cET/otx3JZxKB32n8j9xbPsMZQihfmL3WpUIh9u8t5UPxjwBuOSWYmVuhza::2; __adroll_fpc=76b3cd1ee25f0f80997d6c6b0f53fd86-1595736074261; _fbp=fb.1.1595736074767.210364020; _gid=GA1.2.1153286955.1595996477; __asc=45f23bee173a221c9ecf1ac3f9a; osCsid=i2ur198vro7qetrco32fs1i9e0; _gat_gtag_UA_46005179_1=1; TawkConnectionTime=0; __ar_v4=G3NB2AWGMJALLM3LQB7B6W%3A20200725%3A121%7CYCTJCPNBHJAIPIVE526GC4%3A20200725%3A121%7CLM3XUYFU3ZECHJECYX2EJI%3A20200725%3A121',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
     }
 
     login_data = {
         'action': 'process',
-        'email_address': 'londonholder@gmail.com',
-        'password': 'ToEQN',
-        'x': '33',
-        'y': '16',
+        'email_address': 'tmebatson@gmail.com',
+        'password': 'hRIcV',
+        'x': '61',
+        'y': '8',
     }
 
     with requests.Session() as session:  # open session
@@ -127,7 +127,7 @@ def get_data(pages): # iterate over pages and create dataframe
 
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
-            # time.sleep(60) # sleep function limits the number of requests over time
+            time.sleep(10) # sleep function limits the number of requests over time
             page = scrape_data(page) # page = return of scrape_data function
             data.append(page)  # add data from page
 
