@@ -7,7 +7,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 # path to chromedriver
 driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 domain = r'https://www.wonatrading.com/'
-product_page = r'https://www.wonatrading.com/jewelry/anklet'
+product_page = r'https://www.wonatrading.com/jewelry/body-jewelry'
 
 
 
