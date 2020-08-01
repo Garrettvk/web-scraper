@@ -6,6 +6,8 @@ import time
 # path to chromedriver
 driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
+driver.get('google.com')
+
 def clean_description(input_string):
 
     remove_list = ['�', '\n', '\t', '•'] # items to remove
