@@ -45,9 +45,14 @@ def get_all_products():
         
     return all_products
 
-driver.get(r'https://www.wonatrading.com/jewelry/bracelet')
+for category in get_categories():
 
-# <img src="images/next.gif" border="0" align="absmiddle">
-element = driver.find_element_by_class_name('pageResults')
+    driver.get(category)
 
-print(element)
+    number_of_products = int(driver.find_element_by_xpath('//*[@id="buyForm"]/table[2]/tbody/tr[4]/td/center/b[3]').text)
+
+
+    number_of_pages = (number_of_products // 100) + 1
+    
+    print(number_of_pages)
+
