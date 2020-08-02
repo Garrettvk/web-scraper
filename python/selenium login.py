@@ -45,7 +45,9 @@ def get_all_products():
         
     return all_products
 
-all_products = get_all_products()
+driver.get(r'https://www.wonatrading.com/jewelry/bracelet')
 
-# for product in all_products:
-#     print(product)
+# <img src="images/next.gif" border="0" align="absmiddle">
+element = driver.find_element_by_class_name('pageResults')
+
+print(element)
