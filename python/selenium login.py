@@ -1,31 +1,51 @@
 from selenium import webdriver
-from getpass import getpass
-from functions import *
-
-
-# this is more secure than hard coding the credentials in the file
-# username = input('Enter your username: ')
-# password = getpass('Enter your password: ')  # hides password being typed
-
-# turn this off in production, use method up top ^
-username = 'tmebatson@gmail.com'
-password = 'hRIcV'
+from bs4 import BeautifulSoup
 
 # path to chromedriver
-driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe') 
+driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-driver.get(r'https://www.wonatrading.com/')  # load hompage first so that it picks up cookies
-driver.get(r'https://www.wonatrading.com/login')  # wona login page
+# remove images
+chrome_options = webdriver.ChromeOptions()
+prefs = {"profile.managed_default_content_settings.images": 2}
+chrome_options.add_experimental_option("prefs", prefs)
+driver = webdriver.Chrome(chrome_options=chrome_options)
 
-username_textbox = driver.find_element_by_name('email_address') #find element for email input
-username_textbox.send_keys(username) # send what you put as userinput
+def scrape_hrefs(url, class_):
+    driver.get(url) # open given url
+    soup = BeautifulSoup(driver.page_source, 'html5lib')  # soup = parsed html
+    html_elements = soup.find_all('a', class_ = class_) # html element holding page numbers
+    hrefs_list = [page['href'] for page in html_elements]  # list of links for each category    
+    return hrefs_list # return list of hrefs
 
-password_textbox = driver.find_element_by_name('password') #find element for password input
-password_textbox.send_keys(password) # send what you put as password
+def get_page_numbers(url):  # function the gets url for product pages
+    class_ = 'pageResults' # class of html that contains each category    
+    page_urls_list = scrape_hrefs(url, class_) # get hrefs for each product page
+    page_urls_list.insert(0, driver.current_url) # add the url of first product page to beginning of list
 
-login_button = driver.find_element_by_id('btnLogin') # element of login button
-login_button.click()  # clicks login button
+    # Create a dictionary, using the List items as keys.
+    # This will automatically remove any duplicates because dictionaries cannot have duplicate keys.
+    page_urls_list = list(dict.fromkeys(page_urls_list))  # remove duplicates
 
-pages = get_product_links()[0:1][0]  # first page
+    return page_urls_list # return list of urls
 
-driver.get(pages)  # open first product page
+def get_categories():
+    url = r'https://www.wonatrading.com/jewelry' # page that shows categories of jewelry
+    class_ = 'category brrem' # class of html that contains each category
+    category_hrefs = scrape_hrefs(url, class_)  # list of all the hrefs for wach category
+    return category_hrefs
+
+def get_all_products():
+
+    all_products = [] # list for href of every product category and its pages
+    category_hrefs = get_categories() # get list of hrefs for each category
+
+    for category in category_hrefs: # for each href of category
+        product_pages = get_page_numbers(category)  # list of hrefs for each category
+        all_products.extend(product_pages)  # extend all_products list with list of hrefs for each category
+        
+    return all_products
+
+all_products = get_all_products()
+
+# for product in all_products:
+#     print(product)
