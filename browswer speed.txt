@@ -1,0 +1,11 @@
+1 browser
+	4.8 products a minute
+
+2 browsers
+	7.7 products a minute
+
+3 browsers
+	12 products a minute
+
+4 browsers
+	17 products a minute
