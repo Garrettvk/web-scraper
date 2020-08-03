@@ -77,7 +77,7 @@ def get_product_links():
             
     return product_links
 
-def scrape_data(product_page_url):  # gets data from single page
+def scrape_data(product_page_url, driver):  # gets data from single page
 
     driver.get(product_page_url)  # open first product page
 
@@ -116,7 +116,7 @@ def scrape_data(product_page_url):  # gets data from single page
 
     return data
 
-def get_data(pages): # iterate over pages and create dataframe
+def get_data(pages, driver): # iterate over pages and create dataframe
 
     data = []  # list of data from each page
 
@@ -126,7 +126,7 @@ def get_data(pages): # iterate over pages and create dataframe
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
             time.sleep(10) # sleep function limits the number of requests over time
-            page = scrape_data(page) # page = return of scrape_data function
+            page = scrape_data(page, driver) # page = return of scrape_data function
             data.append(page)  # add data from page
 
     except AttributeError:      
