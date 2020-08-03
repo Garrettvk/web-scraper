@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 import time
+import pprint
 
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
@@ -173,3 +174,54 @@ def get_pages_data():
     df.reset_index(drop=True, inplace=True) # reset index
 
     return df
+
+def get_number_of_products(number_of_products):
+
+    products_per_page = 100 # the number of products displayed on each page
+    number_of_pages, remainder = divmod(number_of_products, products_per_page)  # divmod returns the # of whole pages and the remainder
+
+    if number_of_pages == 0: # if there are 0 pages
+        number_of_pages = 1 # 1 is the lowest amount of pages possible
+    else: # if page > 0
+        if remainder > 0: # if remainder exsists
+            number_of_pages += 1 # add a page
+
+    return number_of_pages
+
+def scrape_hrefs(url, class_, driver):
+    driver.get(url) # open given url
+    soup = BeautifulSoup(driver.page_source, 'html5lib')  # soup = parsed html
+    html_elements = soup.find_all('a', class_ = class_) # html element holding page numbers
+    hrefs_list = [page['href'] for page in html_elements]  # list of links for each category    
+    return hrefs_list # return list of hrefs
+
+def get_categories(driver):
+    url = r'https://www.wonatrading.com/jewelry' # page that shows categories of jewelry
+    class_ = 'category brrem' # class of html that contains each category
+    category_hrefs = scrape_hrefs(url, class_, driver)  # list of all the hrefs for wach category
+    return category_hrefs
+
+def get_pages(driver):
+
+    pages = {} # dictionary containg page numbers for each category
+
+    for category in get_categories(driver):
+
+        driver.get(category)
+
+
+        # text of element containing # of products converted to an int
+        number_of_products = int(driver.find_element_by_xpath('/html/body/div[1]/div/table[2]/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr[4]/td/form/table[2]/tbody/tr[4]/td/center/b[3]').text)
+        
+        number_of_products = get_number_of_products(number_of_products)
+        
+        pages[f'{category}'] = number_of_products
+
+    return pages
+
+# exec(open('./python/sample.py').read())
+
+# for printing pages dictionary
+# driver = get_driver()
+# pages = get_pages(driver)
+# pprint.pprint(pages)
