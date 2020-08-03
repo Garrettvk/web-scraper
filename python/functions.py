@@ -4,7 +4,15 @@ import pandas as pd
 import time
 
 # path to chromedriver
-driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
+# driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
+
+# remove images
+def get_driver():
+    chrome_options = webdriver.ChromeOptions()
+    prefs = {"profile.managed_default_content_settings.images": 2}
+    chrome_options.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    return driver
 
 def clean_description(input_string):
 
@@ -129,5 +137,39 @@ def get_data(pages): # iterate over pages and create dataframe
 
     # create dataframe
     df = pd.DataFrame(columns=columns, data=data)
+
+    return df
+
+def get_pages_data():
+
+    # use this dictionary for testing, 
+    # in productioin pages should = get_pages(driver) that way the page numbers are up to date
+    pages = {'https://www.wonatrading.com/jewelry/anklet': 2,      
+            'https://www.wonatrading.com/jewelry/body-jewelry': 2,
+            'https://www.wonatrading.com/jewelry/bracelet': 85,
+            'https://www.wonatrading.com/jewelry/brooch': 7,
+            'https://www.wonatrading.com/jewelry/cubic-zirconia': 15,
+            'https://www.wonatrading.com/jewelry/earring': 137,
+            'https://www.wonatrading.com/jewelry/jewelry-component': 1,
+            'https://www.wonatrading.com/jewelry/jewelry-display': 1,
+            'https://www.wonatrading.com/jewelry/mask': 4,
+            'https://www.wonatrading.com/jewelry/necklace': 73,
+            'https://www.wonatrading.com/jewelry/pendant-set': 3,
+            'https://www.wonatrading.com/jewelry/ring': 9,
+            'https://www.wonatrading.com/jewelry/stainless-steel': 1,
+            'https://www.wonatrading.com/jewelry/watch': 1}
+
+    data = list(pages.items()) # data for dataframe
+    columns = ['Product Category','# of Pages'] # names of columns for dataframe
+    df = pd.DataFrame(data = data, columns = columns) # create dataframe
+    
+    def clean_category(input_string):
+        element = 'https://www.wonatrading.com/jewelry/' # items to remove
+        input_string = input_string.replace(element, '') # remove each item
+        return input_string.strip() # return cleaned input string
+
+    df['Product Category'] = df['Product Category'].apply(clean_category) # remove https://www.wonatrading.com/jewelry/
+    df.sort_values('# of Pages', inplace=True) # sort dataframe by least to greatest # of pages
+    df.reset_index(drop=True, inplace=True) # reset index
 
     return df

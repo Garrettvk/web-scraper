@@ -1,6 +1,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
+import pprint
+
 
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
@@ -71,13 +72,14 @@ def get_pages(driver):
         # text of element containing # of products converted to an int
         number_of_products = int(driver.find_element_by_xpath('/html/body/div[1]/div/table[2]/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr[4]/td/form/table[2]/tbody/tr[4]/td/center/b[3]').text)
         
-        number_of_products = get_number_of_products(number_of_products) 
-
-        start_index = category.rindex('/') + 1 
-        category = category[start_index:] # gete category from end of url
+        number_of_products = get_number_of_products(number_of_products)
         
         pages[f'{category}'] = number_of_products
 
     return pages
 
 # exec(open('./python/sample.py').read())
+
+pages = get_pages(driver)
+
+pprint.pprint(pages)
