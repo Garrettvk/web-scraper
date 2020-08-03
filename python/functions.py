@@ -1,10 +1,19 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import pandas as pd
 import time
 
 # path to chromedriver
-driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
+# driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
+
+def get_driver(): # functioin returns a drive with no images
+    chrome_options = webdriver.ChromeOptions()
+    prefs = {"profile.managed_default_content_settings.images": 2}
+    chrome_options.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    return driver
+
 
 def clean_description(input_string):
 
@@ -25,7 +34,7 @@ def clean_price(input_string):
 
     return input_string.strip()
 
-def get_product_links(product_page):
+def get_product_links(product_page, driver):
 
     # login
     # turn this off in production, use method up top ^
@@ -46,9 +55,7 @@ def get_product_links(product_page):
         'password')  # find element for password input
     password_textbox.send_keys(password)  # send what you put as password
 
-    login_button = driver.find_element_by_id(
-        'btnLogin')  # element of login button
-    login_button.click()  # clicks login button
+    password_textbox.send_keys(Keys.ENTER) # press enter key after typing password
 
     product_links = []  # this is product urls for all the products on the first page'
 
@@ -66,7 +73,7 @@ def get_product_links(product_page):
             
     return product_links
 
-def scrape_data(product_page_url):  # gets data from single page
+def scrape_data(product_page_url, driver):  # gets data from single page
 
     driver.get(product_page_url)  # open first product page
 
@@ -105,7 +112,7 @@ def scrape_data(product_page_url):  # gets data from single page
 
     return data
 
-def get_data(pages): # iterate over pages and create dataframe
+def get_data(pages, driver): # iterate over pages and create dataframe
 
     data = []  # list of data from each page
 
@@ -115,7 +122,7 @@ def get_data(pages): # iterate over pages and create dataframe
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
             time.sleep(10) # sleep function limits the number of requests over time
-            page = scrape_data(page) # page = return of scrape_data function
+            page = scrape_data(page, driver) # page = return of scrape_data function
             data.append(page)  # add data from page
 
     except AttributeError:      
