@@ -7,14 +7,6 @@ import time
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-def get_driver(): # functioin returns a drive with no images
-    chrome_options = webdriver.ChromeOptions()
-    prefs = {"profile.managed_default_content_settings.images": 2}
-    chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(chrome_options=chrome_options)
-    return driver
-
-
 def clean_description(input_string):
 
     remove_list = ['�', '\n', '\t', '•'] # items to remove
@@ -36,27 +28,6 @@ def clean_price(input_string):
 
 def get_product_links(product_page, driver):
 
-    # login
-    # turn this off in production, use method up top ^
-    username = 'tmebatson@gmail.com'
-    password = 'hRIcV'
-
-    domain = r'https://www.wonatrading.com/'
-
-    # load hompage first so that it picks up cookies
-    driver.get(domain)
-    driver.get(r'https://www.wonatrading.com/login')  # wona login page
-
-    username_textbox = driver.find_element_by_name(
-        'email_address')  # find element for email input
-    username_textbox.send_keys(username)  # send what you put as userinput
-
-    password_textbox = driver.find_element_by_name(
-        'password')  # find element for password input
-    password_textbox.send_keys(password)  # send what you put as password
-
-    password_textbox.send_keys(Keys.ENTER) # press enter key after typing password
-
     product_links = []  # this is product urls for all the products on the first page'
 
     driver.get(product_page)  # first product page
@@ -69,6 +40,7 @@ def get_product_links(product_page, driver):
     for product in products:  # iterate each product on webpage
         product_link = product['href']  # assign href to a variable
         product_link = product_link.replace('\r\n', '')  # remove hidden characters from href
+        domain = r'https://www.wonatrading.com/' # variable for domain
         product_links.append(f'{domain}{product_link}')  # add domain
             
     return product_links
