@@ -25,7 +25,7 @@ def clean_price(input_string):
 
     return input_string.strip()
 
-def get_product_links():
+def get_product_links(product_page):
 
     # login
     # turn this off in production, use method up top ^
@@ -50,9 +50,7 @@ def get_product_links():
         'btnLogin')  # element of login button
     login_button.click()  # clicks login button
 
-    product_links = []  # this is product urls for all the products on the first page
-
-    product_page = r'https://www.wonatrading.com/jewelry/anklet'
+    product_links = []  # this is product urls for all the products on the first page'
 
     driver.get(product_page)  # first product page
 
