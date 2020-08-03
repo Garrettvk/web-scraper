@@ -7,7 +7,7 @@ import pprint
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-# remove images
+# remove images 
 def get_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {"profile.managed_default_content_settings.images": 2}
@@ -161,7 +161,7 @@ def get_pages_data():
             'https://www.wonatrading.com/jewelry/watch': 1}
 
     data = list(pages.items()) # data for dataframe
-    columns = ['Product Category','# of Pages'] # names of columns for dataframe
+    columns = ['url','# of Pages'] # names of columns for dataframe
     df = pd.DataFrame(data = data, columns = columns) # create dataframe
     
     def clean_category(input_string):
@@ -169,7 +169,7 @@ def get_pages_data():
         input_string = input_string.replace(element, '') # remove each item
         return input_string.strip() # return cleaned input string
 
-    df['Product Category'] = df['Product Category'].apply(clean_category) # remove https://www.wonatrading.com/jewelry/
+    df['Product Category'] = df['url'].apply(clean_category) # remove https://www.wonatrading.com/jewelry/
     df.sort_values('# of Pages', inplace=True) # sort dataframe by least to greatest # of pages
     df.reset_index(drop=True, inplace=True) # reset index
 
@@ -218,6 +218,16 @@ def get_pages(driver):
         pages[f'{category}'] = number_of_products
 
     return pages
+
+def get_page_urls(url, number_of_pages): # this function gets urls for every page # 
+    page_urls = [] # list containg urls for each page number
+    for i in range(number_of_pages): # for each page number
+        if i == 0: # if the index is 0
+            page_urls.append(url) # the main page is first page
+        else: # any number highier than that
+            i += 1 # add 1 to index
+            page_urls.append(f'{url}/page={i}') # add page number to url
+    return page_urls # return filled list
 
 # exec(open('./python/sample.py').read())
 
