@@ -1,0 +1,22 @@
+Webscraper
+
+    i've scraped the first product from each product page but im only getting one product back
+    Im assuming this is because the function only returns one product at a time.
+    to solve this:
+        create a list to hold each product df
+        run the for loop
+            variable = return of function
+            append variable to list
+        
+        concat everything in the list to one df
+        print df
+        write to csv
+
+variant template
+    four digit product code should be sequential: 0001, 0002, 0003
+    categories isn't formatted right, check slack for more details
+
+use get pass for login password
+create a django site with authentication that london can use to run the scraper
+thinking about how this can be easy as possible considering she wants it to be automated
+a really simple jupyter notebook might be easier
