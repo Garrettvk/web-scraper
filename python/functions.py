@@ -15,6 +15,11 @@ def get_driver():
     driver = webdriver.Chrome(chrome_options=chrome_options)
     return driver
 
+
+# it would be faster if this function ran once than the 4 webscrappers opened
+# the first time the function is ran it should vase the list to a python file
+# every webscraper should then reference that list
+# get driver function should have a variable for whether or not login happens: login = True
 def get_product_links_redo(driver): # this gets every product page
 
     def get_pages_data(driver):
