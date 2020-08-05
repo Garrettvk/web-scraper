@@ -93,7 +93,7 @@ def get_product_links_redo(driver): # this gets every product page
         number_of_pages = df.at[category_index, '# of Pages']
 
         def get_page_urls(url, number_of_pages): # this function gets urls for every page # 
-            page_urls = [] # list containg urls for each page number
+            page_urls = [] # list containing urls for each page number
             for i in range(number_of_pages): # for each page number
                 if i == 0: # if the index is 0
                     page_urls.append(url) # the main page is first page
