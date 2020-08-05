@@ -9,12 +9,12 @@ from selenium.webdriver.common.keys import Keys # used for pressing enter on log
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-def get_driver(): # return driver with no images
+def get_driver(login_on = True): # return driver with no images
     options = webdriver.ChromeOptions() # create option
     prefs = {"profile.managed_default_content_settings.images": 2} # preference to disable images
     options.add_experimental_option("prefs", prefs) # add option
     driver = webdriver.Chrome(options=options) # add option o webdriver
-    driver = login(driver) # login diver
+    driver = login(driver) if login_on else driver # login diver
     return driver # return driver
 
 def login(driver):  # function for logging in driver
