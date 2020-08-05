@@ -1,16 +1,10 @@
 Webscraper
 
-    i've scraped the first product from each product page but im only getting one product back
-    Im assuming this is because the function only returns one product at a time.
-    to solve this:
-        create a list to hold each product df
-        run the for loop
-            variable = return of function
-            append variable to list
-        
-        concat everything in the list to one df
-        print df
-        write to csv
+    consider making a remove duplicate function for output dataframe
+    reset index of output dataframe
+
+    set up multiple scrapers with split list function
+    write to csv
 
 variant template
     four digit product code should be sequential: 0001, 0002, 0003
