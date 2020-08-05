@@ -136,14 +136,14 @@ def get_data(pages, driver): # iterate over pages and create dataframe
 
     return df
 
-def scrape_product_links(product_links, driver_1):
+def scrape_product_links(product_links, driver):
     
     scraped_product_links = []
 
     for product_link in product_links:
         print(product_link) # print current product link
-        pages = get_product_links(product_link, driver_1)[0:1] # links for all the products on given page
-        df = get_data(pages, driver_1) # dataframe = return of function that scrapes data
+        pages = get_product_links(product_link, driver)[0:1] # links for all the products on given page
+        df = get_data(pages, driver) # dataframe = return of function that scrapes data
         scraped_product_links.append(df) # add df to list
         
     return scraped_product_links
