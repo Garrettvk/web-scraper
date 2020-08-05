@@ -1,8 +1,10 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import pandas as pd
-import time
+import time # timing functions
+from product_links import *
+import pandas as pd # data analaysis 
+from bs4 import BeautifulSoup # used for web scraping
+from selenium import webdriver # creates automated browser
+from more_itertools import divide # used for spliting product likes list into equal parts
+from selenium.webdriver.common.keys import Keys # used for pressing enter on login screen
 
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
@@ -145,3 +147,8 @@ def scrape_product_links(product_links, driver_1):
         scraped_product_links.append(df) # add df to list
         
     return scraped_product_links
+
+def split_product_links():
+    page_indexs = divide(4, product_links) # divides list into 4 equal-ish parts
+    split_list = [list(page_index) for page_index in page_indexs] # creates a list of 4 lists
+    return split_list # return list
