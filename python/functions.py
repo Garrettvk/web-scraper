@@ -7,6 +7,31 @@ import time
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
+def get_driver(): # return driver with no images
+    options = webdriver.ChromeOptions() # create option
+    prefs = {"profile.managed_default_content_settings.images": 2} # preference to disable images
+    options.add_experimental_option("prefs", prefs) # add option
+    driver = webdriver.Chrome(options=options) # add option o webdriver
+    driver = login(driver) # login diver
+    return driver # return driver
+
+def login(driver):  # function for logging in driver
+    # login
+    username = 'tmebatson@gmail.com'
+    password = 'hRIcV' # use getpass in production
+
+    driver.get(r'https://www.wonatrading.com/') # load hompage first so that it picks up cookies
+    driver.get(r'https://www.wonatrading.com/login')  # wona login page
+
+    username_textbox = driver.find_element_by_name('email_address')  # find element for email input
+    username_textbox.send_keys(username)  # send what you put as userinput
+
+    password_textbox = driver.find_element_by_name('password')  # find element for password input
+    password_textbox.send_keys(password)  # send what you put as password
+    password_textbox.send_keys(Keys.ENTER) # press enter key after typing password
+
+    return driver
+
 def clean_description(input_string):
 
     remove_list = ['�', '\n', '\t', '•'] # items to remove
