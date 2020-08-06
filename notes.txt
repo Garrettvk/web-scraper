@@ -5,3 +5,9 @@ this program could be improved by:
     clean description
     add domain to image links
     organize functions
+
+Notes on all products scraped
+    I'm not sure if every product was scraped
+
+    start time = 2020, 8, 5, 1, 13, 1, 380536
+    end time = (2020, 8, 5, 23, 20, 22, 280779)
