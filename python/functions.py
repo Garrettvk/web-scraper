@@ -165,7 +165,7 @@ def split_product_links(update = False):
 def get_pages_data(update = False):
 
     if not update: # if update is false
-        df = pd.read_csv('../csv/product_category_urls.csv').fillna('') # read csv file containing webscraper output
+        df = pd.read_csv('../csv/product_category_urls.csv (old)').fillna('') # read csv file containing webscraper output
         return df # return lastest csv file
     
     else:  # if update is true, proceed with rest of function

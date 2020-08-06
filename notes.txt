@@ -20,3 +20,14 @@ Notes on all products scraped
 
     look at the output with index, hidden characters are throwing off the line numbers
     overall data needs to be cleaned
+
+SAVE URLS YOU'VE ALREADY BEEN TO
+    if url is already record
+        if it still exsits:
+            skip
+        else:
+            remove data
+    if url hasn't been recorded
+        if it exsists
+            get data
+            record link

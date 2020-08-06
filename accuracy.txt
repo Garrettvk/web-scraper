@@ -1,0 +1,20 @@
+So how are you going to approach to know accurately that we got them all?
+    df = product_category_urls.csv
+    number_of_products = df['# of Products'].sum()
+
+    when the scrapers are done the will produce a csv of the results. 
+    If the number of products found isn't 100% the scrapers will rescrape all the product categories.
+    if a product category is different than what is all ready is the results csv file
+
+    Should we be scraping the stock number?
+        the stock number needs to be updated
+
+Update function
+    should check if product_category_urls.csv has changed
+
+    if the number of products for a url has changed
+        iterate over the product pages
+            if a product already exsists
+                skip over it
+            else
+                add data
