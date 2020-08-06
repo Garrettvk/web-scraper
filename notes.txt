@@ -11,3 +11,12 @@ Notes on all products scraped
 
     start time = 2020, 8, 5, 1, 13, 1, 380536
     end time = (2020, 8, 5, 23, 20, 22, 280779)
+
+    there are 24541 products
+        make a program that can find the current # of products
+
+    the process took 22 hours	6 minutes	39 seconds
+        about 1115 products an hour
+
+    look at the output with index, hidden characters are throwing off the line numbers
+    overall data needs to be cleaned
