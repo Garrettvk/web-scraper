@@ -1,5 +1,4 @@
 import time # timing functions
-from product_links import *
 import pandas as pd # data analaysis 
 from bs4 import BeautifulSoup # used for web scraping
 from selenium import webdriver # creates automated browser
@@ -136,17 +135,26 @@ def get_data(pages, driver): # iterate over pages and create dataframe
 
     return df
 
-def scrape_product_links(product_links, driver):
+def scrape_product_links(update = False): # use update = True to update data in product_category_urls.csv
+
+    product_links = split_product_links(update)[0][0:1] # links from section 1
     
-    scraped_product_links = []
+    scraped_product_links = [] # list of each product scraped
+    
+    driver_1 = get_driver() # first driver object
 
     for product_link in product_links:
         print(product_link) # print current product link
-        pages = get_product_links(product_link, driver)[0:1] # links for all the products on given page
-        df = get_data(pages, driver) # dataframe = return of function that scrapes data
-        scraped_product_links.append(df) # add df to list
+        pages = get_product_links(product_link, driver_1)[0:1] # links for all the products on given page
+        df = get_data(pages, driver_1) # dataframe = return of function that scrapes data
+        scraped_product_links.append(df)  # add df to list
+
+    driver_1.close()  # shut driver off
         
-    return scraped_product_links
+    output_df = pd.concat(scraped_product_links) # combine list into 1 dataframe
+    output_df.reset_index(drop=True, inplace=True) # reset index
+        
+    return output_df # return dataframe
 
 def split_product_links(update = False):
     product_links = get_product_links_data(update)
