@@ -1,16 +1,20 @@
 Webscraper
+    create a function that finds the number of products
+        inside of dataframe of product pages add a column the contains the # of products
+            add everything in that column
 
     consider making a remove duplicate function for output dataframe
-    reset index of output dataframe
-
-    set up multiple scrapers with split list function
-    write to csv
+    
+    we could possibly make web scraper faster by using virtual machines with different vpns
 
 variant template
-    four digit product code should be sequential: 0001, 0002, 0003
-    categories isn't formatted right, check slack for more details
+    Nothing should be in product image description   
 
-use get pass for login password
-create a django site with authentication that london can use to run the scraper
-thinking about how this can be easy as possible considering she wants it to be automated
-a really simple jupyter notebook might be easier
+other tasks
+    use get pass for login password
+    
+    create a django site with authentication that london can use to run the scraper
+    
+    thinking about how this can be easy as possible considering she wants it to be automated
+    
+    a really simple jupyter notebook might be easier
