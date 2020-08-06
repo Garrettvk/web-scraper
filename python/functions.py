@@ -280,4 +280,19 @@ def get_product_links_data(update = False): # this gets every product page
 
     return urls_list
 
+def combine_data():
+
+    df_list = []
+
+    for i in range(1,5):
+        df = pd.read_csv(f'../csv/section_{i}.csv').fillna('')
+        df_list.append(df)
+
+    output_df = pd.concat(df_list)
+
+    output_df.reset_index(drop=True, inplace=True)
+
+    return output_df
+
+
 # # exec(open('./python/sample.py').read()) # open python file in shell
