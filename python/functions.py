@@ -148,7 +148,128 @@ def scrape_product_links(product_links, driver):
         
     return scraped_product_links
 
-def split_product_links():
+def split_product_links(update = False):
+    product_links = get_product_links_data(update)
     page_indexs = divide(4, product_links) # divides list into 4 equal-ish parts
     split_list = [list(page_index) for page_index in page_indexs] # creates a list of 4 lists
-    return split_list # return list
+    return split_list  # return list
+    
+def get_pages_data(update = False):
+
+    if not update: # if update is false
+        df = pd.read_csv('../csv/product_category_urls.csv').fillna('') # read csv file containing webscraper output
+        return df # return lastest csv file
+    
+    else:  # if update is true, proceed with rest of function
+    
+        driver = get_driver(login_on=False) # driver does not need to login unless scraping price
+
+        def get_pages(driver):
+
+            pages = {}  # dictionary containing page numbers for each category
+
+            def get_categories(driver):
+                # page that shows categories of jewelry
+                url = r'https://www.wonatrading.com/jewelry'
+                class_ = 'category brrem'  # class of html that contains each category
+
+                # scrape hrefs
+                driver.get(url)  # open given url
+                soup = BeautifulSoup(driver.page_source, 'html5lib') # soup = parsed html
+                html_elements = soup.find_all('a', class_=class_) # html element holding page numbers
+                hrefs_list = [page['href'] for page in html_elements] # list of links for each category
+
+                return hrefs_list
+
+            number_of_products_list = []  # this is a list of number of products for each category
+
+            for category in get_categories(driver):
+
+                driver.get(category)
+
+                # text of element containing # of products converted to an int
+                number_of_products = int(driver.find_element_by_xpath(
+                    '/html/body/div[1]/div/table[2]/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr[4]/td/form/table[2]/tbody/tr[4]/td/center/b[3]').text)
+
+                number_of_products_list.append(number_of_products) # add number of products to list
+
+                def get_number_of_products(number_of_products):
+
+                    products_per_page = 100  # the number of products displayed on each page
+
+                    # divmod returns the # of whole pages and the remainder
+                    number_of_pages, remainder = divmod(
+                        number_of_products, products_per_page)
+
+                    if number_of_pages == 0:  # if there are 0 pages
+                        number_of_pages = 1  # 1 is the lowest amount of pages possible
+                    else:  # if page > 0
+                        if remainder > 0:  # if remainder exsists
+                            number_of_pages += 1  # add a page
+
+                    return number_of_pages
+
+                number_of_products = get_number_of_products(number_of_products)
+
+                pages[f'{category}'] = number_of_products
+
+            # return pages dictionary and list for number of products
+            return pages, number_of_products_list
+
+        pages, number_of_products_list = get_pages(driver)  # function returns dictionary {'category' : # of products,}
+
+        data = list(pages.items())  # data for dataframe
+        columns = ['url', '# of Pages']  # names of columns for dataframe
+        df = pd.DataFrame(data=data, columns=columns)  # create dataframe
+        # add a column for the number of products per category
+        df['# of Products'] = number_of_products_list
+
+        def clean_category(input_string):
+            element = 'https://www.wonatrading.com/jewelry/'  # items to remove
+            input_string = input_string.replace(
+                element, '')  # remove each item
+            return input_string.strip()  # return cleaned input string
+
+        # remove https://www.wonatrading.com/jewelry/
+        df['Product Category'] = df['url'].apply(clean_category)
+        # sort dataframe by least to greatest # of pages
+        df.sort_values('# of Pages', inplace=True)
+        df.reset_index(drop=True, inplace=True)  # reset index
+
+        driver.close()  # shut driver off
+
+        # write data to csv
+        df.to_csv('../csv/product_category_urls.csv', index=False)
+
+        return df
+
+# when update = False product_category_urls.csv is returned
+def get_product_links_data(update = False): # this gets every product page
+
+    df = get_pages_data(update) # this returns a dataframe with columns: url, # of Pages, Product Category
+
+    urls_list = []
+
+    for category_index in df.index.tolist():    
+
+        url = df.at[category_index, 'url']
+
+        number_of_pages = df.at[category_index, '# of Pages']
+
+        def get_page_urls(url, number_of_pages): # this function gets urls for every page # 
+            page_urls = [] # list containing urls for each page number
+            for i in range(number_of_pages): # for each page number
+                if i == 0: # if the index is 0
+                    page_urls.append(url) # the main page is first page
+                else: # any number highier than that
+                    i += 1 # add 1 to index
+                    page_urls.append(f'{url}/page={i}') # add page number to url
+            return page_urls # return filled list
+
+        result = get_page_urls(url, number_of_pages)
+
+        urls_list.extend(result)
+
+    return urls_list
+
+# # exec(open('./python/sample.py').read()) # open python file in shell
