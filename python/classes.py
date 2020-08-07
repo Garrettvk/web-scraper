@@ -38,6 +38,8 @@ class Product:
                 this will overide the class variable as long as self.markup is used in price function
                 if Product.markup was used, the class variable would be used.
     '''
+    pages_df = pd.read_csv('csv/product_category_urls.csv').fillna('')  # open csv as dataframe
+
 
     # Class variables contain data that is shared with all instances
     # you can only access class variables through the class or an instance of the class
@@ -58,7 +60,7 @@ class Product:
         self.description = description
         self.cost = cost
         # self.price = self.cost * Product.markup
-        # self.style = self.get_style_number()
+        self.style = self.get_style_number()
         # self.url = self.get_url()
         # self.description = self.get_description()  # clean description
 
@@ -81,17 +83,11 @@ class Product:
         when calling methods you need to use () because you're calling a method not an attribute
     '''
 
-    # def get_style_number(self):  # returns product's style number
-    #     pattern = re.compile(r'\d{6}')  # 6 digit pattern
-    #     # look for matches in product description
-    #     matches = pattern.finditer(self.description)
-    #     matches_list = [match.group()
-    #                     for match in matches]  # create a list of each match
-    #     try:
-    #         return matches_list[0]  # return first match
-    #     except IndexError as Error:
-    #         print()
-    #         print(matches_list)
+    def get_style_number(self):  # returns product's style number
+        style_regex = re.compile(r'\d{5}\d*')  # 6 digit pattern        
+        mo = style_regex.search(self.description).group(0) # match object
+        return mo # return style number
+       
 
     # def get_url(self):
     #     name = self.name.replace(' ', '-')
@@ -185,7 +181,6 @@ class Product:
 
 
 df = pd.read_csv('csv/24541 products.csv').fillna('')  # open csv as dataframe
-pages_df = pd.read_csv('csv/product_category_urls.csv').fillna('')  # open csv as dataframe
 
 
 # all product objects from dataframe
