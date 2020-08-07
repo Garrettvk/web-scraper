@@ -20,11 +20,8 @@ from datetime import datetime
 class Product:
 
     '''
-        Class variables contain data that is shared with all instances
-        you can only access class variables through the class or an instance of the class
-
         Change the class and the instances:
-            Product.markup = 10
+        Product.markup = 10
 
         Change the value for 1 instance:
             Product_1.markup = 4
@@ -35,6 +32,8 @@ class Product:
                 if Product.markup was used, the class variable would be used.
     '''
 
+    # Class variables contain data that is shared with all instances
+    # you can only access class variables through the class or an instance of the class
     count = 0  # incremented as products are created
     markup = 2  # differene between cost price and price
     domain = 'https://www.wonatrading.com/'
@@ -52,8 +51,7 @@ class Product:
         self.price = self.cost * Product.markup
         self.style = self.get_style_number()
         self.url = self.get_url()
-        self.description = self.get_description() # clean description
-
+        self.description = self.get_description()  # clean description
 
         # using class name instead of self insures each instance has the same value
         Product.count += 1  # add a product to counter
@@ -91,12 +89,13 @@ class Product:
         return f'{Product.domain}product_info.php?products_id={self.style}&kind=2&cPath=172_93_96&description={name}'
 
     def get_description(self):
-        try: # start description from theme
+        try:  # start description from theme
             start = self.description.index('Theme')
-        except ValueError: # use size if there is no theme
+        except ValueError:  # use size if there is no theme
             start = self.description.index('Size')
-        end = self.description.index(self.name) # end string at product name
-        return self.description[start:end].strip() # return string without leading and trailing whitespace
+        end = self.description.index(self.name)  # end string at product name
+        # return string without leading and trailing whitespace
+        return self.description[start:end].strip()
 
     '''
         Class methods
@@ -119,6 +118,10 @@ class Product:
         name, category, image_1, image_2, description, cost = [
             df.at[index, column] for column in columns]
         return cls(name, category, image_1, image_2, description, cost)
+
+    @classmethod
+    def get_accuracy(cls, df):
+        pass
 
     '''
         Static methods don't pass anything automatically
