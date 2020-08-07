@@ -61,7 +61,7 @@ class Product:
         self.cost = cost
         # self.price = self.cost * Product.markup
         self.style = self.get_style_number()
-        # self.url = self.get_url()
+        self.url = self.get_url()
         # self.description = self.get_description()  # clean description
 
         # using class name instead of self insures each instance has the same value
@@ -89,9 +89,9 @@ class Product:
         return mo # return style number
        
 
-    # def get_url(self):
-    #     name = self.name.replace(' ', '-')
-    #     return f'{Product.domain}product_info.php?products_id={self.style}&kind=2&cPath=172_93_96&description={name}'
+    def get_url(self):
+        name = self.name.replace(' ', '-')
+        return f'{Product.domain}product_info.php?products_id={self.style}&kind=2&cPath=172_93_96&description={name}'
 
     # def get_description(self):
     #     description = self.description
