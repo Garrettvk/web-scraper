@@ -1,0 +1,13 @@
+look over categories
+    if page numbers don't match:
+        iterate products in that category
+        save urls of each product to a list called visited_products
+
+once we save all the product urls, we can use them to check whats missing
+when scraper runs again it will check if url is visited
+
+if the url has been visited but is no longer online
+    remove product
+
+if url is online and has not been visited
+    add product

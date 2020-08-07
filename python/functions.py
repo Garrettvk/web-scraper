@@ -21,7 +21,7 @@ def login(driver):  # function for logging in driver
     username = 'tmebatson@gmail.com'
     password = 'hRIcV' # use getpass in production
 
-    driver.get(r'https://www.wonatrading.com/') # load hompage first so that it picks up cookies
+    driver.get(r'https://www.wonatrading.com/') # load homepage first so that it picks up cookies
     driver.get(r'https://www.wonatrading.com/login')  # wona login page
 
     username_textbox = driver.find_element_by_name('email_address')  # find element for email input
@@ -82,7 +82,7 @@ def scrape_data(product_page_url, driver):  # gets data from single page
     categories = soup.find_all(
         'a', style='font-family:eurof;font-size:14px;')
 
-    # combine all 3 categories and seperate with ; and /
+    # combine all 3 categories and separate with ; and /
     Category = f'{categories[0].text};{categories[1].text}/{categories[2].text}'
 
     image1 = soup.find('img', id='main_img')['src']
@@ -105,8 +105,10 @@ def scrape_data(product_page_url, driver):  # gets data from single page
     # cleaned price
     price = clean_price(price)
 
+    url = driver.current_url # save page url
+
     # each product attribute is put into a list
-    data = [product_name, Category, image1, image2, description, price]
+    data = [product_name, Category, image1, image2, description, price, url]
 
     return data
 
@@ -115,10 +117,11 @@ def get_data(pages, driver): # iterate over pages and create dataframe
     data = []  # list of data from each page
 
     # column names are from webscrapper output
-    columns = ['Product Name', 'Category', 'Product Image File - 1', 'Product Image File - 2', 'Product Description', 'Cost Price']
+    columns = ['Product Name', 'Category', 'Product Image File - 1', 'Product Image File - 2', 'Product Description', 'Cost Price', 'url']
 
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
+            print(f'Product: {pages.index(page) + 1}/{len(pages)}') # print progress
             time.sleep(10) # sleep function limits the number of requests over time
             page = scrape_data(page, driver) # page = return of scrape_data function
             data.append(page)  # add data from page
@@ -137,14 +140,27 @@ def get_data(pages, driver): # iterate over pages and create dataframe
 
 def scrape_product_links(update = False): # use update = True to update data in product_category_urls.csv
 
-    product_links = split_product_links(update)[0][0:1] # links from section 1
+    # product_links = split_product_links(update)[0][0:1] # links from section 1
+    
+    product_links = [ # product links that need to be updated
+        'https://www.wonatrading.com/jewelry/watch',
+        'https://www.wonatrading.com/jewelry/anklet',
+        'https://www.wonatrading.com/jewelry/pendant-set',
+        'https://www.wonatrading.com/jewelry/mask',
+        'https://www.wonatrading.com/jewelry/brooch',
+        'https://www.wonatrading.com/jewelry/ring',
+        'https://www.wonatrading.com/jewelry/cubic-zirconia',
+        'https://www.wonatrading.com/jewelry/necklace',
+        'https://www.wonatrading.com/jewelry/bracelet',
+        'https://www.wonatrading.com/jewelry/earring'
+    ]
     
     scraped_product_links = [] # list of each product scraped
     
     driver_1 = get_driver() # first driver object
 
     for product_link in product_links:
-        print(product_link) # print current product link
+        print(f'{product_link} {product_links.index(product_link) + 1}/{len(product_links)}') # print progress
         pages = get_product_links(product_link, driver_1)[0:1] # links for all the products on given page
         df = get_data(pages, driver_1) # dataframe = return of function that scrapes data
         scraped_product_links.append(df)  # add df to list
@@ -295,4 +311,4 @@ def combine_data():
     return output_df
 
 
-# # exec(open('./python/sample.py').read()) # open python file in shell
+# exec(open('./python/sample.py').read()) # open python file in shell
