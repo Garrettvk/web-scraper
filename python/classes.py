@@ -120,19 +120,14 @@ class Product:
     #         print(error)
     #         sys.exit()
 
-
-    def get_url(self):
-        name = self.name.replace(' ', '-')
-        return f'{Product.domain}product_info.php?products_id={self.style}&kind=2&cPath=172_93_96&description={name}'
-
-    def get_description(self):
-        try:  # start description from theme
-            start = self.description.index('Theme')
-        except ValueError:  # use size if there is no theme
-            start = self.description.index('Size')
-        end = self.description.index(self.name)  # end string at product name
-        # return string without leading and trailing whitespace
-        return self.description[start:end].strip()
+    # def get_description(self):
+    #     try:  # start description from theme
+    #         start = self.description.index('Theme')
+    #     except ValueError:  # use size if there is no theme
+    #         start = self.description.index('Size')
+    #     end = self.description.index(self.name)  # end string at product name
+    #     # return string without leading and trailing whitespace
+    #     return self.description[start:end].strip()
 
     '''
         Class methods
