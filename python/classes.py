@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import regex as re
 from datetime import datetime
@@ -13,6 +14,12 @@ from datetime import datetime
 
     you can use str() and repr() with classes
     its the same as: Class.__str__(), Class.__repr__()
+
+    Magic Methods (dunder methods)
+        def __add__(self, other):
+        # adds to product prices together
+        # you can run this by: self + other
+        return self.price() + other.price()
 
 '''
 
@@ -35,6 +42,7 @@ class Product:
     # Class variables contain data that is shared with all instances
     # you can only access class variables through the class or an instance of the class
     count = 0  # incremented as products are created
+    web_count = pages_df['# of Products'].sum()
     markup = 2  # differene between cost price and price
     domain = 'https://www.wonatrading.com/'
 
@@ -43,15 +51,16 @@ class Product:
         # aka constructor
 
         self.name = name
+        self.index = self.count
         self.category = category
         self.image_1 = Product.domain + image_1
         self.image_2 = Product.domain + image_2
         self.description = description
         self.cost = cost
-        self.price = self.cost * Product.markup
-        self.style = self.get_style_number()
-        self.url = self.get_url()
-        self.description = self.get_description()  # clean description
+        # self.price = self.cost * Product.markup
+        # self.style = self.get_style_number()
+        # self.url = self.get_url()
+        # self.description = self.get_description()  # clean description
 
         # using class name instead of self insures each instance has the same value
         Product.count += 1  # add a product to counter
@@ -65,24 +74,56 @@ class Product:
         # representation of object for end users
         # function gets called when print is used
         return self.name
-
-    def __add__(self, other):
-        # adds to product prices together
-        # you can run this by: self + other
-        return self.price() + other.price()
+    
 
     '''
         These are regular methods, these methods always contain self
         when calling methods you need to use () because you're calling a method not an attribute
     '''
 
-    def get_style_number(self):  # returns product's style number
-        pattern = re.compile(r'\d{6}')  # 6 digit pattern
-        # look for matches in product description
-        matches = pattern.finditer(self.description)
-        matches_list = [match.group()
-                        for match in matches]  # create a list of each match
-        return matches_list[0]  # return first match
+    # def get_style_number(self):  # returns product's style number
+    #     pattern = re.compile(r'\d{6}')  # 6 digit pattern
+    #     # look for matches in product description
+    #     matches = pattern.finditer(self.description)
+    #     matches_list = [match.group()
+    #                     for match in matches]  # create a list of each match
+    #     try:
+    #         return matches_list[0]  # return first match
+    #     except IndexError as Error:
+    #         print()
+    #         print(matches_list)
+
+    # def get_url(self):
+    #     name = self.name.replace(' ', '-')
+    #     return f'{Product.domain}product_info.php?products_id={self.style}&kind=2&cPath=172_93_96&description={name}'
+
+    # def get_description(self):
+    #     description = self.description
+    #     try:  # start description from theme
+    #         start = description.find('Theme')
+    #     except ValueError as error:  # use size if there is no theme
+    #         start = description.find('Size')
+    #         print()
+    #         print(repr(description))
+    #         print()
+    #         print(repr(start))
+    #         print()
+    #         print(error)
+    #         sys.exit()
+        
+    #     try:
+    #         end = self.description.lower().index(self.name.lower())  # end string at product name
+    #         # return string without leading and trailing whitespace
+    #         # return self.description[start:end].strip()
+    #     except ValueError as error:
+    #         print()
+    #         print(repr(self.name))
+    #         print()
+    #         print(repr(self.description))
+    #         print()
+    #         print(error)
+    #         sys.exit()
+
 
     def get_url(self):
         name = self.name.replace(' ', '-')
@@ -114,14 +155,21 @@ class Product:
         cls.markup = amount
 
     @classmethod  # creates product from dataframe data
-    def from_dataframe(cls, columns, index):
-        name, category, image_1, image_2, description, cost = [
-            df.at[index, column] for column in columns]
-        return cls(name, category, image_1, image_2, description, cost)
+    def from_dataframe(cls):
+        names = df['Product Name'].values.tolist()
+        prices = df['Cost Price'].values.tolist()
+        categories = df['Category'].values.tolist()
+        images_1 = df['Product Image File - 1'].values.tolist()
+        images_2 = df['Product Image File - 2'].values.tolist()
+        descriptions = df['Product Description'].values.tolist()
+        costs = df['Cost Price'].values.tolist()
+
+        return [Product(name, category, image_1, image_2, description, cost) for name, category, image_1, image_2, description, cost in zip(names, categories, images_1, images_2, descriptions, costs)]
 
     @classmethod
-    def get_accuracy(cls, df):
-        pass
+    def found(cls): # returns the amount of products found
+        percentage = int((cls.count / cls.web_count) * 100)
+        return f'{percentage}% of Products Found'
 
     '''
         Static methods don't pass anything automatically
@@ -137,12 +185,11 @@ class Product:
 
 
 df = pd.read_csv('csv/24541 products.csv').fillna('')  # open csv as dataframe
+pages_df = pd.read_csv('csv/product_category_urls.csv').fillna('')  # open csv as dataframe
 
-# create products from dataframe
-Product_1 = Product.from_dataframe(df.columns, 0)
-Product_2 = Product.from_dataframe(df.columns, 1)
-Product_3 = Product.from_dataframe(df.columns, 2)
-Product_4 = Product.from_dataframe(df.columns, 3)
+
+# all product objects from dataframe
+Products = Product.from_dataframe()
 
 
 def cls():  # function for clearing shell
