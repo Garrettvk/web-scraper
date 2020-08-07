@@ -11,3 +11,12 @@ if the url has been visited but is no longer online
 
 if url is online and has not been visited
     add product
+
+
+fix images in variant template
+
+domain for jewelry
+
+domain for other products
+
+next big project is dating website, different than tinder or bubble
