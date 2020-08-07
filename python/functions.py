@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys # used for pressing enter on log
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-def get_driver(login_on = True): # return driver with no images
+def get_driver(login_on = False): # return driver with no images
     options = webdriver.ChromeOptions() # create option
     prefs = {"profile.managed_default_content_settings.images": 2} # preference to disable images
     options.add_experimental_option("prefs", prefs) # add option
@@ -121,6 +121,7 @@ def get_data(pages, driver): # iterate over pages and create dataframe
 
     try: # try while ip isn't blocked
         for page in pages:  # iterate over html for each product
+            print(page) 
             print(f'Product: {pages.index(page) + 1}/{len(pages)}') # print progress
             time.sleep(10) # sleep function limits the number of requests over time
             page = scrape_data(page, driver) # page = return of scrape_data function
@@ -148,7 +149,7 @@ def scrape_product_links(index, update = False): # use update = True to update d
 
     for product_link in product_links:
         print(f'{product_link} {product_links.index(product_link) + 1}/{len(product_links)}') # print progress
-        pages = get_product_links(product_link, driver_1) # links for all the products on given page
+        pages = get_product_links(product_link, driver_1)[0:1] # links for all the products on given page
         df = get_data(pages, driver_1) # dataframe = return of function that scrapes data
         scraped_product_links.append(df)  # add df to list
 
