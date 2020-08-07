@@ -7,3 +7,12 @@ Update function
                 skip over it
             else
                 add data
+    
+    keep track of product urls with driver.current_url
+        using url pattern from style code and product name works but isnt the same as driver.current_url
+        run the web scraper again and keep track of urls
+
+        scrape each product
+        if product name
+
+    remove duplicates with df = df.loc[:,~df.columns.duplicated()]
