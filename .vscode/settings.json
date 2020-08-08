@@ -3,6 +3,7 @@
         "eurof",
         "itertools",
         "prefs",
+        "visted",
         "wona"
     ]
 }

@@ -8,7 +8,11 @@ from selenium.webdriver.common.keys import Keys # used for pressing enter on log
 # path to chromedriver
 # driver = webdriver.Chrome(r'C:\Users\admin\Anaconda3\Lib\site-packages\chromedriver\chromedriver.exe')
 
-def get_driver(login_on = False): # return driver with no images
+def get_visted():
+    current_data = pd.read_csv('../csv/current_data.csv').fillna('') # open current data csv
+    return current_data['url'].tolist() # return list of visted urls
+
+def get_driver(login_on = True): # return driver with no images
     options = webdriver.ChromeOptions() # create option
     prefs = {"profile.managed_default_content_settings.images": 2} # preference to disable images
     options.add_experimental_option("prefs", prefs) # add option
