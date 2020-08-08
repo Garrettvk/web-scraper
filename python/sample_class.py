@@ -22,8 +22,8 @@ class Page:
         self.product_urls = self.get_product_urls()
 
     def get_category(self):
-        start = self.url.rindex('/') + 1
-        return self.url[start:]
+        start = self.url.rindex('/') + 1 # string of category starts at the last /
+        return self.url[start:] # slice string
 
     def get_product_count(self):
         driver.get(self.url)
@@ -40,7 +40,7 @@ class Page:
         if number_of_pages == 0:  # if there are 0 pages
             number_of_pages = 1  # 1 is the lowest amount of pages possible
         else:  # if page > 0
-            if remainder > 0:  # if remainder exsists
+            if remainder > 0:  # if remainder exists
                 number_of_pages += 1  # add a page
 
         return number_of_pages        
@@ -49,23 +49,27 @@ class Page:
         return [self.url + f'/page={i}' for i in range(2, self.page_count + 1)]
 
     def get_product_urls(self):
-        product_links = []  # this is product urls for all the products on the first page'
+        product_links = []  # list for product links that will be returned
 
-        driver.get(self.url)  # first product page
+        first_page = [self.url] # first page for iterating products
+        product_pages = self.get_page_urls() # every other page after the first
+        product_pages = first_page + product_pages # add first page to complete set
 
-        soup = BeautifulSoup(driver.page_source, 'html5lib')  # parsed html
+        for product_page in product_pages: # for every page containing products
+            driver.get(product_page)  # open product_page in selenium
+            soup = BeautifulSoup(driver.page_source, 'html5lib')  # parse html
 
-        # this html element contains the href for the product
-        products = soup.find_all('a', style="position:relative;float:left;")
+            # html element for href of each product
+            products = soup.find_all('a', style="position:relative;float:left;")
 
-        for product in products:  # iterate each product on webpage
-            product_link = product['href']  # assign href to a variable
-            product_link = product_link.replace('\r\n', '')  # remove hidden characters from href
-            domain = r'https://www.wonatrading.com/' # variable for domain
-            product_links.append(f'{domain}{product_link}')  # add domain
+            for product in products:  # iterate each product on webpage
+                product_link = product['href']  # assign href to a variable
+                product_link = product_link.replace('\r\n', '')  # remove hidden characters from href
+                product_links.append(f'{Page.domain}{product_link}') # add domain
                 
-        return product_links
+        return product_links # return product links found
 
+all_products = []
 
 category_pages = [
     'https://www.wonatrading.com/jewelry/anklet', 
@@ -84,10 +88,13 @@ category_pages = [
     'https://www.wonatrading.com/jewelry/jewelry-display'
     ]
 
+for category in category_pages: # for each category
+    Page_object = Page(category) # create a Page Object
+    all_products += Page_object.product_urls # add all product links to all products list
+     
 
-for page in category_pages:
-    output = Page(page)
-    print(output.product_urls)
+# 32983 products found!
+print(len(all_products))
 
 
 # exec(open('./python/sample_class.py').read()) # open python file in shell
